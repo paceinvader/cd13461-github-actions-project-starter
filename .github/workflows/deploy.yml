@@ -1,1 +1,59 @@
+name: "CorpX Docu Deployment"
 
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - ".gitignore"
+      - "README.md"
+      - "CONTRIBUTING.md"
+      - "LICENSE"
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+  workflow_dispatch:
+    inputs:
+      force_deploy:
+        description: 'Force deploy'
+        required: false
+        default: 'false'
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      URL_CHECKER_TIMEOUT: 30
+    steps:
+      - name: "Checkout the repository"
+        uses: actions/checkout@v4
+
+      - name: "Setup Node"
+        uses: actions/setup-node@v6
+        with:
+          node-version: 18
+
+      - name: "Cache Node"
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: node_modules-${{ hashFiles('package-lock.json') }}
+
+      - name: "Install dependencies"
+        run: npm install
+        continue-on-error: false
+
+      - name: "Run all the linters"
+        run: npm run lint:all
+        continue-on-error: false
+
+      - name: "Run Scripts"
+        run: node script/url-checker.js -t ${{ env.URL_CHECKER_TIMEOUT }}
+        continue-on-error: false
+        
