@@ -117,15 +117,6 @@ jobs:
       issues: write
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Download built site artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: sites
-          path: _site/
-
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
