@@ -80,7 +80,7 @@ jobs:
             ${{ runner.os }}-node_modules-
 
       - name: "Install dependencies"
-        run: npm ci --ignore-scripts
+        run: npm install
         continue-on-error: false
       
       #- name: "Build site"
