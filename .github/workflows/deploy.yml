@@ -15,11 +15,6 @@ on:
     types:
       - opened
   workflow_dispatch:
-    inputs:
-      force_deploy:
-        description: 'Force deploy'
-        required: false
-        default: 'false'
 
 concurrency:
   group: ${{ github.workflow }}
