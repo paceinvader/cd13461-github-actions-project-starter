@@ -86,6 +86,9 @@ jobs:
       - name: Rebuild sharp
         run: npm rebuild sharp --verbose
         continue-on-error: false
+
+      - name: Add pagefind v1 (no-save)
+        run: npm i --no-save pagefind@^1
       
       #- name: "Build site"
       #  run: |
