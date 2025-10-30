@@ -97,6 +97,10 @@ jobs:
       
       - name: "Build site"
         run: npm run prod
+
+      - name: Remove symlinks (Pages requirement)
+        run: |
+          find _site -type l -delete
     
       - name: "Upload Artifacts"
         uses: actions/upload-artifact@v4
