@@ -80,17 +80,12 @@ jobs:
             ${{ runner.os }}-node_modules-
 
       - name: "Install dependencies"
-        run: npm ci --ignore-scripts
+        run: |
+          npm ci --ignore-scripts
+          npm rebuild sharp --verbose
+          npm i --no-save pagefind@^1
         continue-on-error: false
 
-      - name: Rebuild sharp
-        run: npm rebuild sharp --verbose
-        continue-on-error: false
-
-      - name: Add pagefind v1 (no-save)
-        run: npm i --no-save pagefind@^1
-        continue-on-error: false
-      
       - name: "Set Path Prefix"
         run: |
           PathPrefix="/$(echo "${{ github.repository }}" | cut -d '/' -f2-)/"
