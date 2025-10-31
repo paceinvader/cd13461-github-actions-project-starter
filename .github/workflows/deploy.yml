@@ -101,7 +101,6 @@ jobs:
         continue-on-error: false
     
       - name: "Upload Artifacts"
-        #uses: actions/upload-artifact@v4
         uses: actions/upload-pages-artifact@v3
         with:
           name: sites
@@ -129,15 +128,20 @@ jobs:
         with:
           artifact_name: sites
 
-      - name: Authenticate GitHub CLI
-        run: gh auth login --with-token <<< "${{ secrets.GITHUB_TOKEN }}"
-
       - name: Create deployment status issue
+        if: always()
         run: |
-          date=$(date +'%Y-%m-%d')
-          status="succeeded"
-          if [[ "${{ job.status }}" != "success" ]]; then
+          gh auth login --with-token <<< "${{ secrets.GITHUB_TOKEN }}" 
+          DATE=$(date +'%Y-%m-%d')
+          
+          if [[ "${{ job.status }}" = "success" ]]; then
+            status="succeeded"
+          else
             status="failed"
           fi
           url="${{ steps.deployment.outputs.page_url }}"
-          gh issue create --title "$date - Deployment: $status" --body "URL: $url"
+          gh issue create \ 
+            --title "Doc Deployment $status ($date)" \
+            --body "Run Number: ${{github.run_id}} \nURL: $url" \
+            --label "deployment-status" \
+            --repo "${{ github.repository}}"
