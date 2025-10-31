@@ -135,8 +135,4 @@ jobs:
             status="failed"
           fi
           url="${{ steps.deployment.outputs.page_url }}"
-          gh issue create \ 
-            --title "Doc Deployment $status ($date)" \
-            --body "Run Number: ${{github.run_id}} \nURL: $url" \
-            --label "deployment-status" \
-            --repo "${{ github.repository}}"
+          gh issue create --title "Doc Deployment $status ($date)" --body "Run Number: ${{github.run_id}} \nURL: $url" --label "deployment-status" --assignee "@me"
